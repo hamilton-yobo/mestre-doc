@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'documents',
+    'cloudinary',
+    'cloudinary_storage',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -50,9 +52,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
-    'cloudinary',
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -149,4 +148,4 @@ X_FRAME_OPTIONS = 'DENY'  # Mas usamos @xframe_options_exempt na view específic
 # Configurações de segurança para iframes
 X_FRAME_OPTIONS = 'SAMEORIGIN'  # Padrão mais seguro
 
-
+WSGI_APPLICATION = 'dev.wsgi.application'
