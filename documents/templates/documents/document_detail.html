@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .protected-viewer {
+        position: relative;
+        overflow: hidden;
+    }
+    .protected-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        pointer-events: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ document.title }}</h1>
+<p>{{ document.description }}</p>
+
+{% if can_view %}
+<div class="document-viewer">
+    {% if view_only %}
+    <div class="protected-viewer">
+        <!-- Overlay para proteção (só visualização) -->
+        <div class="protected-overlay"></div>
+        
+        <!-- Visualizador seguro -->
+        <iframe 
+            src="{{ document.file.url }}#toolbar=0&navpanes=0" 
+            width="100%" 
+            height="600px"
+            style="border: none;"
+            id="secureViewer"
+        ></iframe>
+    </div>
+    {% else %}
+    <!-- Visualização normal para outros níveis de acesso -->
+    <embed 
+        src="{{ document.file.url }}" 
+        type="application/pdf" 
+        width="100%" 
+        height="600px"
+    >
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="actions" style="margin-top: 20px;">
+    {% if can_download %}
+    <a href="{{ document.file.url }}" download class="btn btn-primary">
+        <i class="fas fa-download"></i> Baixar
+    </a>
+    {% endif %}
+    
+    {% if can_print %}
+    <button onclick="window.print()" class="btn btn-secondary">
+        <i class="fas fa-print"></i> Imprimir
+    </button>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if view_only %}
+<script>
+    // Desabilita o menu de contexto (botão direito)
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // Desabilita atalhos de teclado
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+S, Ctrl+C, Ctrl+P, etc.
+        if (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 80 || e.keyCode === 85)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        // F12 (DevTools)
+        if (e.keyCode === 123) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    // Impede arrastar a imagem (caso o PDF seja renderizado como imagem)
+    document.querySelector('#secureViewer').addEventListener('dragstart', function(e) {
+        e.preventDefault();
+    });
+
+    // Mensagem para o usuário
+    document.addEventListener('DOMContentLoaded', function() {
+        alert('Este documento está em modo de visualização apenas. Download e cópia estão desabilitados.');
+    });
+</script>
+{% endif %}
+{% endblock %}

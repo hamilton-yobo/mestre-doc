@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Documentos{% endblock %}
+
+{% block content %}
+<h1>Documentos Disponíveis</h1>
+{% if user.is_authenticated %}
+<a href="{% url 'document_upload' %}" class="btn btn-primary">
+    <i class="fas fa-upload"></i> Upload Documento
+</a>
+{% endif %}
+
+<div class="document-list" style="margin-top: 2rem;">
+    {% for document in documents %}
+    <div class="document-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+        <h3>
+            <a href="{% url 'document_view' document.pk %}">{{ document.title }}</a>
+        </h3>
+        
+        {% if document.access_level == 'view' %}
+        <div class="access-info" style="color: #666; font-size: 0.9em;">
+            <i class="fas fa-eye"></i> Apenas visualização
+        </div>
+        {% elif document.access_level == 'blocked' %}
+        <div class="access-info" style="color: #cc0000; font-size: 0.9em;">
+            <i class="fas fa-lock"></i> Acesso bloqueado - Pagamento necessário
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

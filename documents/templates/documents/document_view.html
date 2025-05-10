@@ -1,0 +1,72 @@
+<!-- documents/templates/documents/document_view.html -->
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .pdf-container {
+        position: relative;
+        width: 100%;
+        height: 80vh;
+        overflow: hidden;
+    }
+    .pdf-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+    }
+    .no-download-message {
+        background: #fff8e1;
+        padding: 15px;
+        border-left: 4px solid #ffc107;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ document.title }}</h1>
+    
+    {% if is_protected %}
+    <div class="no-download-message">
+        <i class="fas fa-info-circle"></i> Modo de visualização apenas - Download desabilitado
+    </div>
+    {% endif %}
+
+    <div class="pdf-container">
+        {% if is_protected %}
+        <div class="pdf-overlay" 
+             onclick="alert('Download desabilitado para este documento');"></div>
+        {% endif %}
+        
+        <embed src="{{ document.file.url }}#toolbar=0&navpanes=0" 
+               type="application/pdf" 
+               width="100%" 
+               height="100%">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if is_protected %}
+<script>
+    // Bloqueia funcionalidades de download
+    document.addEventListener('keydown', function(e) {
+        // Bloqueia Ctrl+S, Ctrl+P, etc.
+        if (e.ctrlKey && (e.key === 's' || e.key === 'p')) {
+            e.preventDefault();
+            alert('Download/impressão desabilitado para este documento');
+        }
+    });
+
+    // Bloqueia menu de contexto (botão direito)
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Menu de contexto desabilitado');
+    });
+</script>
+{% endif %}
+{% endblock %}
