@@ -49,7 +49,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'cloudinary_storage',
+    'django.contrib.staticfiles',
+    'cloudinary',
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'djyqbopjs',
+    'API_KEY': '416486727426745',
+    'API_SECRET': 'UNScuSdjfT-16A4zAiPa0MXxo9U',
+}
 
 ROOT_URLCONF = 'dev.urls'
 
@@ -117,6 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Pasta onde os arquivos estáticos serão coletados
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Pasta com seus arquivos estáticos locais
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -132,3 +148,5 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'  # Mas usamos @xframe_options_exempt na view específica
 # Configurações de segurança para iframes
 X_FRAME_OPTIONS = 'SAMEORIGIN'  # Padrão mais seguro
+
+
