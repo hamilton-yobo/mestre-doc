@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.document_list, name='document_list'),
     path('upload/', views.document_upload, name='document_upload'),
     path('<int:pk>/view/', views.document_view, name='document_view'),  # Corrigido aqui
-    # Outras URLs...
+    path('faturas/gerar/<int:fatura_id>/', views.gerar_fatura_pdf, name='gerar_fatura'),
+    path('faturas/verificar/<str:codigo>/', views.verificar_fatura, name='verificar_fatura'),
 ]

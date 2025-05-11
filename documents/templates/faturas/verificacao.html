@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Verificação de Fatura</h2>
+    <div class="card">
+        <div class="card-body">
+            {% if fatura %}
+                <h5 class="card-title">Fatura #{{ fatura.numero }}</h5>
+                <p class="card-text">
+                    <strong>Cliente:</strong> {{ fatura.cliente.get_full_name }}<br>
+                    <strong>Valor:</strong> R$ {{ fatura.valor_total }}<br>
+                    <strong>Status:</strong> {% if fatura.pago %}Pago{% else %}Pendente{% endif %}
+                </p>
+                <a href="{{ fatura.pdf.url }}" class="btn btn-primary">Visualizar Fatura</a>
+            {% else %}
+                <p class="text-danger">Fatura não encontrada ou código inválido</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

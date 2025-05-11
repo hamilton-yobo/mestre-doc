@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config Scv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e00t&orfs9isz&-pd^8&(v71tl=(uubyg9rfmqk56w*3yx62w%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['mestre-doc.onrender.com', 'mestredoc.com']
+ALLOWED_HOSTS = [config('HOST')]
 
 
 # Application definition
@@ -54,13 +55,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'djyqbopjs',
-    'API_KEY': '416486727426745',
-    'API_SECRET': 'UNScuSdjfT-16A4zAiPa0MXxo9U',
-}
 
 ROOT_URLCONF = 'dev.urls'
 
@@ -149,3 +143,21 @@ X_FRAME_OPTIONS = 'DENY'  # Mas usamos @xframe_options_exempt na view específic
 X_FRAME_OPTIONS = 'SAMEORIGIN'  # Padrão mais seguro
 
 WSGI_APPLICATION = 'dev.wsgi.application'
+
+# settings.py
+import cloudinary
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUD_NAME'),
+    'API_KEY': config('API_KEY'),        # Disponível no Dashboard do Cloudinary
+    'API_SECRET': config('API_SECRET')   # Mantenha isso seguro!
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Inicialização do Cloudinary
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=CLOUDINARY_STORAGE['API_SECRET']
+)

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Fatura {{ fatura.numero }}</title>
+    <style>
+        body { font-family: Arial; margin: 0; padding: 20px }
+        .header { text-align: center; margin-bottom: 20px }
+        .info { margin-bottom: 30px }
+        table { width: 100%; border-collapse: collapse }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left }
+        .total { font-weight: bold; font-size: 1.2em }
+        .qrcode { float: right; width: 100px; margin-top: 20px }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="display: absolute; top: 4px; left: 20px border: 2px solid green">Mestre DOC</h1>
+        <h1>Fatura #{{ fatura.numero }}</h1>
+        <p>Data: {{ fatura.data_emissao|date:"d/m/Y" }}</p>
+    </div>
+
+    <div class="info">
+        <p><strong>Cliente:</strong> {{ fatura.cliente.get_full_name }}</p>
+        <p><strong>Vencimento:</strong> {{ fatura.vencimento|date:"d/m/Y" }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in itens %}
+            <tr>
+                <td>{{ item }}</td>
+                {% if 'ORCID in item' %}
+                <td>Kz 15000</td>
+                {% elif 'Sinopse' in item %}
+                <td>Kz 5000</td>
+                {% else %}
+                <td>Kz 15000</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div>
+      {% if itens|length == 2 %}
+        <p>Desconto: Kz 10000</p>
+      {% elif itens|length == 3 %}
+        <p>Desconto: Kz 15000</p>
+      {% endif %}
+    </div>
+
+    <div class="total">
+        <p>Total: Kz {{ fatura.valor_total }}</p>
+    </div>
+
+    <div class="qrcode">
+        <img src="data:image/png;base64,{{ qrcode }}" alt="QR Code">
+        <p style="font-size: 8px;">Código: {{ fatura.codigo_verificacao }}</p>
+    </div>
+</body>
+</html>
